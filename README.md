@@ -2,7 +2,7 @@ This project uses a Large Language Model (LLM) to generate a dataset used to tra
 
 This process is known as "Distilling" to take outputs from an LLM to train a smaller network.
 
-Distilling the logic of an LLM down to an MLP can provide complex decision-making at a fraction of the original compute cost.
+Distilling the logic of an LLM down to an MLP provides complex decision-making at a fraction of the original compute cost.
 
 ## Files
 - `llm.py` - Uses [llama.cpp](https://github.com/ggml-org/llama.cpp) to generate the [training_data.txt](training_data.txt).
