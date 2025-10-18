@@ -213,7 +213,7 @@ model.save(model_name + '.keras')
 
 # predict
 p = model.predict(np.array([[5] * 27], dtype=np.float32))
-print("\nReset/Default Percentage: " + "{:.2f}".format(p[0][0]) + "%\n")
+print("\nReset/Default Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n")
 
 # final
 timetaken = (time_ns()-st)/1e+9
