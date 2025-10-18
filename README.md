@@ -1,0 +1,2 @@
+- `llm.py` - This uses [llama.cpp](https://github.com/ggml-org/llama.cpp) to generate the [training_data.txt].
+- `fit.py` - This uses the [training_data.txt] to train an MLP Dense network using [Tensorflow](https://www.tensorflow.org/).
