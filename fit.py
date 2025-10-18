@@ -131,6 +131,7 @@ print("\n--Model Topology")
 # construct neural network
 model = Sequential()
 model.add(Input(shape=(inputsize,)))
+model.add(Dense(layer_units, activation='relu'))
 if topo == 0:
     for x in range(layers): model.add(Dense(layer_units, activation='relu'))
 elif topo == 1:
@@ -190,10 +191,13 @@ print("\nTime Taken:", "{:.2f}".format(timetaken), "seconds")
 print("\n--Exporting Model")
 st = time_ns()
 
+# predict
+p = model.predict(np.array([[0.5] * 27], dtype=np.float32), verbose=0)
+
 # save weights for C array
 li = 0
 f = open(model_name + "_layers.h", "w")
-f.write("#ifndef " + project + "_layers\n#define " + project + "_layers\n\n// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n\n")
+f.write("#ifndef " + project + "_layers\n#define " + project + "_layers\n\n// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n// Default/Reset Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n\n")
 if f:
     for layer in model.layers:
         total_layer_weights = layer.get_weights()[0].transpose().flatten().shape[0]
@@ -230,11 +234,7 @@ model.save(model_name + '.keras')
 timetaken = (time_ns()-st)/1e+9
 print("\nTime Taken:", "{:.2f}".format(timetaken), "seconds\n")
 
-print("--Finalization")
-
-# predict
-p = model.predict(np.array([[0.5] * 27], dtype=np.float32), verbose=0)
-print("\nDefault/Reset Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n")
-
 # final
+print("--Finalization")
+print("\nDefault/Reset Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n")
 print(datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ": " + model_name + "\n")
