@@ -58,7 +58,7 @@ if argc >= 7:
     optimiser = sys.argv[6]
     print("optimiser:", optimiser)
 if argc >= 8:
-    topo = sys.argv[7]
+    topo = int(sys.argv[7])
     print("topo:", topo)
 
 # make sure save dir exists
