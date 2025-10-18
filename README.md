@@ -27,7 +27,7 @@ apt install -y build-essential git cmake ninja-build pkg-config vulkan-tools mes
 apt install -y glslc glslang-tools spirv-tools vulkan-tools
 git clone https://github.com/ggerganov/llama.cpp.git
 cd llama.cpp
-cmake -B build -DGGML_VULKAN=ON -DCMAKE_BUILD_TYPE=Release -G Ninja
+cmake -B build -DGGML_VULKAN=ON -DLLAMA_CURL=OFF -DCMAKE_BUILD_TYPE=Release -G Ninja
 cmake --build build -j
 ```
 
