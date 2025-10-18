@@ -20,6 +20,6 @@ cmake --build build -j
 ```
 
 ## Notes
-- Tensorflow generally trains small MLP's faster on a CPU than a GPU.
+- Tensorflow generally trains small MLPs faster on a CPU than a GPU.
 - LLM's via llama.cpp generally run faster on a GPU using the Vulkan backend.
 - Demo available at [romance.html](https://colinrizzman.github.io/romance)
