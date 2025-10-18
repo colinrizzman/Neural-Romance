@@ -34,7 +34,7 @@ layer_units = 32 # 32, 256
 batches = 512 # 24, 512
 epoches = 33333 # 12500, 33333
 topo = 1
-earlystop = 2727 # 0 = off, anything above is the patience value
+earlystop = 0 # 0 = off, anything above is the patience value
 
 # load options
 argc = len(sys.argv)
@@ -192,23 +192,24 @@ print("\n--Exporting Model")
 st = time_ns()
 
 # predict
-p = model.predict(np.array([[0.5] * 27], dtype=np.float32), verbose=0)
+p1 = model.predict(np.array([[0.5] * 27], dtype=np.float32), verbose=0)
+p2 = model.predict(np.array([[0.0] * 27], dtype=np.float32), verbose=0)
+p3 = model.predict(np.array([[1.0] * 27], dtype=np.float32), verbose=0)
 
-# save weights for C array
+# save weights for JS array
 li = 0
-f = open(model_name + "_layers.h", "w")
-f.write("#ifndef " + project + "_layers\n#define " + project + "_layers\n\n// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n// Default/Reset Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n\n")
+f = open(model_name + "_layers.txt", "w")
+f.write("// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n")
+f.write("// Reset Percentage: " + "{:.2f}".format(p1[0][0]*100) + "%\n")
+f.write("// Min Percentage: " + "{:.2f}".format(p2[0][0]*100) + "%\n")
+f.write("// Max Percentage: " + "{:.2f}".format(p3[0][0]*100) + "%\n\n")
 if f:
     for layer in model.layers:
         total_layer_weights = layer.get_weights()[0].transpose().flatten().shape[0]
         total_layer_units = layer.units
         layer_weights_per_unit = total_layer_weights / total_layer_units
-        print("+ Layer:", li)
-        print("Total layer weights:", total_layer_weights)
-        print("Total layer units:", total_layer_units)
-        print("Weights per unit:", int(layer_weights_per_unit))
 
-        f.write("const float " + project + "_layer" + str(li) + "[] = {")
+        f.write("const L" + str(li) + " = new Float32Array([")
         isfirst = 0
         wc = 0
         bc = 0
@@ -221,20 +222,21 @@ if f:
                 else:
                     f.write("," + str(weight))
                 if wc == layer_weights_per_unit:
-                    f.write(", /* bias */ " + str(layer.get_weights()[1].transpose().flatten()[bc]))
+                    f.write("," + str(layer.get_weights()[1].transpose().flatten()[bc]))
                     wc = 0
                     bc += 1
-        f.write("};\n\n")
+        f.write("])\n")
         li += 1
-f.write("#endif\n")
 f.close()
 
 # save keras model
-model.save(model_name + '.keras')
+#model.save(model_name + '.keras')
 timetaken = (time_ns()-st)/1e+9
 print("\nTime Taken:", "{:.2f}".format(timetaken), "seconds\n")
 
 # final
-print("--Finalization")
-print("\nDefault/Reset Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n")
+print("--Finalization\n")
+print("Reset Percentage: " + "{:.2f}".format(p1[0][0]*100) + "%")
+print("Min   Percentage: " + "{:.2f}".format(p2[0][0]*100) + "%")
+print("Max   Percentage: " + "{:.2f}".format(p3[0][0]*100) + "%\n")
 print(datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ": " + model_name + "\n")
