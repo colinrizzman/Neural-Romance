@@ -5,7 +5,7 @@ This process is known as "Distilling" to transfer knowledge from a larger networ
 Distilling the logic of an LLM down to an MLP provides complex decision-making at a fraction of the original compute cost.
 
 ## How
-- Download the LLM GGUF: [download](https://huggingface.co/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF/blob/main/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf`)
+- Download the LLM GGUF: [download](https://huggingface.co/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF/blob/main/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf)
 - Launch llama.cpp server: `build/bin/llama-server --port 8081 --mlock --ctx-size 512 -m Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf`
 - Launch the dataset generator: `php llm.php 8081`
 - Once it's generated enough lines for the dataset use it to train the MLP: `python fit.py`
