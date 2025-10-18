@@ -19,7 +19,7 @@ from datetime import datetime
 
 # disable warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1' # disable gpu, assuming nvidia
 
 # print everything / no truncations
 np.set_printoptions(threshold=sys.maxsize)
@@ -35,7 +35,7 @@ layer_units = 32 # 32, 96
 batches = 512 # 24, 512
 epoches = 33333 # 12500, 33333
 topo = 1
-earlystop = 3000 # 0 = off, anything above is the patience value
+earlystop = 0 # 0 = off, anything above is the patience value
 
 # load options
 argc = len(sys.argv)
@@ -147,7 +147,7 @@ class PrintFullLoss(Callback):
         logs = logs or {}
         numeric = {k: v for k, v in logs.items() if isinstance(v, (int, float))}
         parts = [f"{k}: {v:.10f}" for k, v in numeric.items()]
-        print(f" - " + " - ".join(parts)) #print(f" - " + " - ".join(parts))
+        print(f" - " + " - ".join(parts))
 print_loss = PrintFullLoss()
 
 early_stop = EarlyStopping(
