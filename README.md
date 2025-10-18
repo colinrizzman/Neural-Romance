@@ -1,6 +1,6 @@
 This project uses a Large Language Model (LLM) to generate a dataset used to train a Multi-Layer Perceptron (MLP) network.
 
-This process is known as "Distilling" to take outputs from an LLM to train a smaller network.
+This process is known as "Distilling" to transfer knowledge from a larger network to a smaller network.
 
 Distilling the logic of an LLM down to an MLP provides complex decision-making at a fraction of the original compute cost.
 
