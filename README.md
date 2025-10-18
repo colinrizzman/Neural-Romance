@@ -5,7 +5,7 @@ This process is known as "Distilling" to take outputs from an LLM to train a sma
 Distilling the logic of an LLM down to an MLP provides complex decision-making at a fraction of the original compute cost.
 
 ## Files
-- `llm.py` - Uses [llama.cpp](https://github.com/ggml-org/llama.cpp) to generate the [training_data.txt](training_data.txt).
+- `llm.php` - Uses [llama.cpp](https://github.com/ggml-org/llama.cpp) to generate the [training_data.txt](training_data.txt).
 - `fit.py` - Uses the [training_data.txt](training_data.txt) to train an MLP Dense network using [Tensorflow](https://www.tensorflow.org/).
 
 ## Prerequisites
@@ -17,7 +17,7 @@ pip install numpy tensorflow
 ## Setup llama.cpp with Vulkan backend
 ```
 apt update
-apt install -y build-essential git cmake ninja-build pkg-config vulkan-tools mesa-vulkan-drivers
+apt install -y build-essential git cmake ninja-build pkg-config vulkan-tools mesa-vulkan-drivers libvulkan-dev
 apt install -y glslc glslang-tools spirv-tools vulkan-tools
 git clone https://github.com/ggerganov/llama.cpp.git
 cd llama.cpp
