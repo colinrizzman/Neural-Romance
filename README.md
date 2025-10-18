@@ -7,7 +7,7 @@ Distilling the logic of an LLM down to an MLP provides complex decision-making a
 ## How
 - Download the LLM GGUF: [download](https://huggingface.co/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF/blob/main/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf)
 - Launch llama.cpp server: `build/bin/llama-server --port 8081 --mlock --ctx-size 512 -m Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf`
-- Launch the dataset generator: `php llm.php 8081`
+- Launch the dataset generator on the same port: `php llm.php 8081`
 - Once it's generated enough lines for the dataset train the MLP: `python fit.py`
 
 ## Files
