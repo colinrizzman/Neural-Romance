@@ -1,3 +1,9 @@
+This project uses a Large Language Model (LLM) to generate a dataset used to train a Multi-Layer Perceptron (MLP) network.
+
+This process is known as "Distilling" to take outputs from an LLM to train a smaller network.
+
+By distilling the logic of an LLM down to an MLP one can provide the complex decision making of an LLM at a fraction of the compute cost.
+
 ## Files
 - `llm.py` - Uses [llama.cpp](https://github.com/ggml-org/llama.cpp) to generate the [training_data.txt](training_data.txt).
 - `fit.py` - Uses the [training_data.txt](training_data.txt) to train an MLP Dense network using [Tensorflow](https://www.tensorflow.org/).
@@ -22,4 +28,5 @@ cmake --build build -j
 ## Notes
 - Tensorflow generally trains small MLPs faster on a CPU than a GPU.
 - LLM's via llama.cpp generally run faster on a GPU using the Vulkan backend.
+- LLM used: [Qwen3-30B-A3B-Instruct-2507-Q4_K_M](https://huggingface.co/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF).
 - Demo available at [romance.html](https://colinrizzman.github.io/romance)
