@@ -1,7 +1,10 @@
 # github.com/colinrizzman
 # pip install numpy tensorflow
-import sys
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+import sys
+import signal
 import numpy as np
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -16,10 +19,6 @@ from os.path import isdir
 from os import mkdir
 from pathlib import Path
 from datetime import datetime
-
-# disable warnings
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1' # disable gpu, assuming nvidia
 
 # print everything / no truncations
 np.set_printoptions(threshold=sys.maxsize)
@@ -66,6 +65,37 @@ if not isdir('models'): mkdir('models')
 model_name = 'models/' + activator + '_' + optimiser + '_' + str(layers) + '_' + str(layer_units) + '_' + str(batches) + '_' + str(epoches) + '_' + str(topo)
 
 ##########################################
+#   HELPERS
+##########################################
+class PrintFullLoss(Callback):
+    def on_epoch_end(self, epoch, logs=None):
+        logs = logs or {}
+        numeric = {k: v for k, v in logs.items() if isinstance(v, (int, float))}
+        parts = [f"{k}: {v:.10f}" for k, v in numeric.items()]
+        print(f" - " + " - ".join(parts))
+print_loss = PrintFullLoss()
+
+early_stop = EarlyStopping(
+    monitor='loss',
+    patience=earlystop,
+    min_delta=1e-7,
+    verbose=1,
+    mode='min'
+)
+
+class _SigintFlag:
+    def __init__(self): self.stop = False
+    def __call__(self, signum, frame): self.stop = True
+sigint_flag = _SigintFlag()
+signal.signal(signal.SIGINT, sigint_flag)
+
+class GracefulStop(keras.callbacks.Callback):
+    def on_train_batch_end(self, batch, logs=None):
+        if sigint_flag.stop: self.model.stop_training = True
+    def on_epoch_end(self, epoch, logs=None):
+        if sigint_flag.stop: self.model.stop_training = True
+
+##########################################
 #   LOAD
 ##########################################
 print("\n--Loading Dataset")
@@ -96,7 +126,7 @@ print("Time Taken:", "{:.2f}".format(timetaken), "seconds")
 ##########################################
 #   TRAIN
 ##########################################
-print("\n--Training Model")
+print("\n--Model Topology")
 
 # construct neural network
 model = Sequential()
@@ -111,18 +141,20 @@ elif topo == 2:
     for x in range(layers):
         model.add(Dense(int(dunits), activation='relu'))
         dunits=dunits/2
-#model.add(Dense(outputsize, activation='sigmoid'))
 model.add(Dense(outputsize))
 
 # output summary
 model.summary()
 
+# set optimiser
 if optimiser == 'adam':
     optim = keras.optimizers.Adam(learning_rate=0.001)
 elif optimiser == 'sgd':
     optim = keras.optimizers.SGD(learning_rate=0.01, momentum=0.0, nesterov=False)
 elif optimiser == 'sgd_decay':
-    #decay = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.3, decay_steps=epoches*dataset_size, decay_rate=0.1)
+    decay = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.3, decay_steps=epoches*dataset_size, decay_rate=0.1)
+    optim = keras.optimizers.SGD(learning_rate=decay, momentum=0.0, nesterov=False)
+elif optimiser == 'sgd_decay_fine':
     decay = keras.optimizers.schedules.ExponentialDecay(initial_learning_rate=0.1, decay_steps=epoches*dataset_size, decay_rate=0.01)
     optim = keras.optimizers.SGD(learning_rate=decay, momentum=0.0, nesterov=False)
 elif optimiser == 'momentum':
@@ -142,25 +174,12 @@ elif optimiser == 'adamax':
 elif optimiser == 'ftrl':
     optim = keras.optimizers.Ftrl(learning_rate=0.001)
 
-class PrintFullLoss(Callback):
-    def on_epoch_end(self, epoch, logs=None):
-        logs = logs or {}
-        numeric = {k: v for k, v in logs.items() if isinstance(v, (int, float))}
-        parts = [f"{k}: {v:.10f}" for k, v in numeric.items()]
-        print(f" - " + " - ".join(parts))
-print_loss = PrintFullLoss()
-
-early_stop = EarlyStopping(
-    monitor='loss',
-    patience=earlystop,
-    min_delta=1e-7,
-    verbose=1,
-    mode='min'
-)
-
+# compile & train
+print("\n--Training Model")
 model.compile(optimizer=optim, loss='mean_squared_error')
-if earlystop == 0:  history = model.fit(train_x, train_y, epochs=epoches, batch_size=batches, callbacks=[print_loss])
-else:               history = model.fit(train_x, train_y, epochs=epoches, batch_size=batches, callbacks=[early_stop, print_loss])
+st = time_ns()
+if earlystop == 0:  history = model.fit(train_x, train_y, epochs=epoches, batch_size=batches, callbacks=[GracefulStop(), print_loss])
+else:               history = model.fit(train_x, train_y, epochs=epoches, batch_size=batches, callbacks=[early_stop, GracefulStop(), print_loss])
 model_name = model_name + "_" + "L[{:.6f}]".format(history.history['loss'][-1])
 timetaken = (time_ns()-st)/1e+9
 print("\nTime Taken:", "{:.2f}".format(timetaken), "seconds")
@@ -172,10 +191,8 @@ print("\n--Exporting Model")
 st = time_ns()
 
 # save weights for C array
-print("\nExporting weights...")
 li = 0
 f = open(model_name + "_layers.h", "w")
-#f.write("#ifndef " + project + "_layers\n#define " + project + "_layers\n\n")
 f.write("#ifndef " + project + "_layers\n#define " + project + "_layers\n\n// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n\n")
 if f:
     for layer in model.layers:
@@ -210,12 +227,14 @@ f.close()
 
 # save keras model
 model.save(model_name + '.keras')
+timetaken = (time_ns()-st)/1e+9
+print("\nTime Taken:", "{:.2f}".format(timetaken), "seconds\n")
+
+print("--Finalization")
 
 # predict
-p = model.predict(np.array([[0.5] * 27], dtype=np.float32))
-print("\nReset/Default Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n")
+p = model.predict(np.array([[0.5] * 27], dtype=np.float32), verbose=0)
+print("\nDefault/Reset Percentage: " + "{:.2f}".format(p[0][0]*100) + "%\n")
 
 # final
-timetaken = (time_ns()-st)/1e+9
-print("Time Taken:", "{:.2f}".format(timetaken), "seconds\n")
 print(datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ": " + model_name + "\n")
