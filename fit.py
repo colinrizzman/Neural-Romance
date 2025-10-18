@@ -35,7 +35,7 @@ layer_units = 32 # 32, 96
 batches = 512 # 24, 512
 epoches = 33333 # 12500, 33333
 topo = 1
-earlystop = 0 # 0 = off, anything above is the patience value
+earlystop = 2727 # 0 = off, anything above is the patience value
 
 # load options
 argc = len(sys.argv)
