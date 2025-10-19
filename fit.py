@@ -19,6 +19,7 @@ from os.path import isdir
 from os import mkdir
 from pathlib import Path
 from datetime import datetime
+from fractions import Fraction
 
 # print everything / no truncations
 np.set_printoptions(threshold=sys.maxsize)
@@ -187,7 +188,7 @@ print("\n--Exporting Model")
 st = time_ns()
 
 # predict
-p1 = model.predict(np.array([[0.5] * 27], dtype=np.float32), verbose=0)
+p1 = model.predict(np.array([[float(Fraction(4, 9))] * 27], dtype=np.float32), verbose=0)
 p2 = model.predict(np.array([[0.0] * 27], dtype=np.float32), verbose=0)
 p3 = model.predict(np.array([[1.0] * 27], dtype=np.float32), verbose=0)
 
@@ -225,8 +226,6 @@ if f:
         li += 1
 f.close()
 
-# save keras model
-#model.save(model_name + '.keras')
 timetaken = (time_ns()-st)/1e+9
 print("\nTime Taken:", "{:.2f}".format(timetaken), "seconds\n")
 
