@@ -60,8 +60,7 @@ if argc >= 8:
     topo = int(sys.argv[7])
     print("topo:", topo)
 
-# make sure save dir exists
-if not isdir('models'): mkdir('models')
+# model name
 model_name = 'models/' + activator + '_' + optimiser + '_' + str(layers) + '_' + str(layer_units) + '_' + str(batches) + '_' + str(epoches) + '_' + str(topo)
 
 ##########################################
@@ -197,6 +196,7 @@ p2 = model.predict(np.array([[0.0] * 27], dtype=np.float32), verbose=0)
 p3 = model.predict(np.array([[1.0] * 27], dtype=np.float32), verbose=0)
 
 # save weights for JS array
+if not isdir('models'): mkdir('models')
 li = 0
 f = open(model_name + "_layers.txt", "w")
 f.write("// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n")
