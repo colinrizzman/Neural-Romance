@@ -36,7 +36,7 @@ epoches = 33333 # 12500, 33333
 topo = 1
 earlystop = 0 # 0 = off, anything above is the patience value
 
-# load options
+# load hyperparameters
 argc = len(sys.argv)
 if argc >= 2: layers = int(sys.argv[1])
 if argc >= 3: layer_units = int(sys.argv[2])
