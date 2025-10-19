@@ -38,27 +38,23 @@ earlystop = 0 # 0 = off, anything above is the patience value
 
 # load options
 argc = len(sys.argv)
-if argc >= 2:
-    layers = int(sys.argv[1])
-    print("layers:", layers)
-if argc >= 3:
-    layer_units = int(sys.argv[2])
-    print("layer_units:", layer_units)
-if argc >= 4:
-    batches = int(sys.argv[3])
-    print("batches:", batches)
-if argc >= 5:
-    epoches = int(sys.argv[4])
-    print("epoches:", epoches)
-if argc >= 6:
-    activator = sys.argv[5]
-    print("activator:", activator)
-if argc >= 7:
-    optimiser = sys.argv[6]
-    print("optimiser:", optimiser)
-if argc >= 8:
-    topo = int(sys.argv[7])
-    print("topo:", topo)
+if argc >= 2: layers = int(sys.argv[1])
+if argc >= 3: layer_units = int(sys.argv[2])
+if argc >= 4: batches = int(sys.argv[3])
+if argc >= 5: epoches = int(sys.argv[4])
+if argc >= 6: activator = sys.argv[5]
+if argc >= 7: optimiser = sys.argv[6]
+if argc >= 8: topo = int(sys.argv[7])
+
+# print hyperparameters
+print("\n--Hyperparameters")
+print("layers:", layers)
+print("layer_units:", layer_units)
+print("batches:", batches)
+print("epoches:", epoches)
+print("activator:", activator)
+print("optimiser:", optimiser)
+print("topo:", topo)
 
 # model name
 model_name = 'models/' + activator + '_' + optimiser + '_' + str(layers) + '_' + str(layer_units) + '_' + str(batches) + '_' + str(epoches) + '_' + str(topo)
