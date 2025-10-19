@@ -127,16 +127,16 @@ print("\n--Model Topology")
 # construct neural network
 model = Sequential()
 model.add(Input(shape=(inputsize,)))
-model.add(Dense(layer_units, activation='relu'))
+model.add(Dense(layer_units, activation=activator))
 if topo == 0:
-    for x in range(layers): model.add(Dense(layer_units, activation='relu'))
+    for x in range(layers): model.add(Dense(layer_units, activation=activator))
 elif topo == 1:
-    for x in range(layers-1): model.add(Dense(layer_units, activation='relu'))
-    model.add(Dense(int(layer_units/2), activation='relu'))
+    for x in range(layers-1): model.add(Dense(layer_units, activation=activator))
+    model.add(Dense(int(layer_units/2), activation=activator))
 elif topo == 2:
     dunits = layer_units
     for x in range(layers):
-        model.add(Dense(int(dunits), activation='relu'))
+        model.add(Dense(int(dunits), activation=activator))
         dunits=dunits/2
 model.add(Dense(outputsize))
 
