@@ -46,6 +46,7 @@ if argc >= 5: epoches = int(sys.argv[4])
 if argc >= 6: activator = sys.argv[5]
 if argc >= 7: optimiser = sys.argv[6]
 if argc >= 8: topo = int(sys.argv[7])
+if argc >= 9: earlystop = int(sys.argv[8])
 
 # print hyperparameters
 print("\n--Hyperparameters")
@@ -56,6 +57,7 @@ print("epoches:", epoches)
 print("activator:", activator)
 print("optimiser:", optimiser)
 print("topo:", topo)
+print("earlystop:", earlystop)
 
 # model name
 model_name = 'models/' + activator + '_' + optimiser + '_' + str(layers) + '_' + str(layer_units) + '_' + str(batches) + '_' + str(epoches) + '_' + str(topo)
