@@ -37,4 +37,4 @@ cmake --build build -j
 - LLM used: [Qwen3-30B-A3B-Instruct-2507-Q4_K_M](https://huggingface.co/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF)
 - Prototype builds here [romance_dev](https://colinrizzman.github.io/romance_dev/)
 - Lowest loss model [relu_sgd_256](https://colinrizzman.github.io/romance_dev/relu_sgd_256.html)
-- Demo available at [romance.html](https://colinrizzman.github.io/romance)
+- Demo available at [relu_adam_32](https://colinrizzman.github.io/romance)
