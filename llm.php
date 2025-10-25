@@ -127,7 +127,7 @@ while(1)
         for($i = 0; $i <= 26; $i++){$output .= number_format(floatval($inputs[$i])/9, 2) . " ";}
         $output .= number_format(floatval(str_replace('%', '', $out))/100, 2);
         file_put_contents("training_data.txt", $output . "\n", LOCK_EX | FILE_APPEND);
-        echo "success: " . $out . "\n";
+        #echo "success: " . $out . "\n";
     }
 }
 curl_close($ch);
