@@ -198,7 +198,7 @@ p3 = model.predict(np.array([[1.0] * 27], dtype=np.float32), verbose=0)
 if not isdir('models'): mkdir('models')
 li = 0
 f = open(model_name + "_layers.txt", "w")
-f.write("// loss: " + "{:.8f}".format(history.history['loss'][-1]) + "\n")
+f.write("// loss: " + "{:.12f}".format(history.history['loss'][-1]) + "\n")
 f.write("// Reset Percentage: " + "{:.2f}".format(p1[0][0]*100) + "%\n")
 f.write("// Min Percentage: " + "{:.2f}".format(p2[0][0]*100) + "%\n")
 f.write("// Max Percentage: " + "{:.2f}".format(p3[0][0]*100) + "%\n\n")
