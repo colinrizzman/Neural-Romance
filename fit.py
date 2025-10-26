@@ -25,7 +25,6 @@ from fractions import Fraction
 np.set_printoptions(threshold=sys.maxsize)
 
 # hyperparameters
-project = "neural_romance"
 optimiser = 'adam'
 activator = 'relu'
 inputsize = 27
