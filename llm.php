@@ -70,7 +70,7 @@ function rndPrompt()
     $prompt .= "quirkiness: " . $inputs[25] . "\n";
     $prompt .= "crazy: " . $inputs[26] . "\n";
     $prompt .= "\n\nbased on these attributes give me a percentage of how likely i am to find love, give me only the percentage";
-    return "<|im_start|>system\n<|im_end|>\n<|im_start|>user\n" . $prompt . "<|im_end|>\n<|im_start|>assistant\n";
+    return "<|im_start|>user\n" . $prompt . "<|im_end|>\n<|im_start|>assistant\n";
 }
 
 /*
