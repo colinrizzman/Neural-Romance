@@ -19,17 +19,17 @@
     
     -----
 
-    Vulkan0: Tesla P40 (24576 MiB, 6191 MiB free)
-    Vulkan1: AMD Instinct MI60 / MI50 (RADV VEGA20) (32752 MiB, 32731 MiB free)
-    Vulkan2: AMD Radeon RX 6300 (RADV NAVI24) (2032 MiB, 1216 MiB free)
-    Vulkan3: AMD Instinct MI60 / MI50 (RADV VEGA20) (32752 MiB, 32731 MiB free)
-
-    llama-server --port 8081 --device Vulkan3 --threads 66 --mlock --ctx-size 512 --batch-size 512 --n-gpu-layers -1 -m Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf
+    llama-server --list-devices
+    llama-server --port 8081 --device Vulkan3 --threads 16 --mlock -m Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf
 
     --device Vulkan1,Vulkan3
+    --device none
     --no-kv-offload
     --no-mmap
     --cpu-strict 1
+    --ctx-size 512
+    --batch-size 512
+    --n-gpu-layers -1
     
 */
 
