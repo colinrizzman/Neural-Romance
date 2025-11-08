@@ -1,4 +1,4 @@
-## ⚠️ Version 2 available: https://github.com/colinrizzman/Neural-Romance-v2
+### ⚠️ Version 2 available: https://github.com/colinrizzman/Neural-Romance-v2
 
 This project uses a Large Language Model (LLM) to generate a dataset used to train a Multi-Layer Perceptron (MLP) network.
 
